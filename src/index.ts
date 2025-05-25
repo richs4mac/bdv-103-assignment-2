@@ -3,8 +3,9 @@ import Koa from "koa";
 import cors from "@koa/cors";
 import zodRouter from 'koa-zod-router';
 import qs from "koa-qs";
+import { v4 as uuid, validate as isUuid } from 'uuid';
 import book_list from "../mcmasterful-book-list.json";
-import { Book } from "./types";
+import { Book, bookSchema } from "./types";
 
 const app = new Koa();
 
@@ -63,6 +64,48 @@ router.register({
 		}
 
 		ctx.body = booksDb.filter((_book: Book, index: number) => filtered[index] === true);
+		await next();
+	}
+});
+
+
+router.register({
+	name: "create or update a book",
+	method: "post",
+	path: "/books",
+	validate: {
+		body: bookSchema,
+	},
+	handler: async (ctx, next) => {
+		const body = ctx.request.body as Book;
+
+		if (body.id) {
+			// if body has ID, check if it's a valid UUID
+			const isIdValid = isUuid(body.id);
+			if (!isIdValid) {
+				ctx.status = 400;
+				ctx.body = { error: `Invalid request` };
+			}
+
+			// check if book ID is in DB
+			if (booksDb.find(book => book.id === body.id)) {
+				// update existing book by ID
+				booksDb = booksDb.map(book => ({
+					...book,
+					...(book.id === body.id ? body : {})
+				}));
+				ctx.body = body.id;
+			} else {
+				ctx.status = 404;
+				ctx.body = { error: `Book not found` };
+			}
+		} else {
+			// if body has no ID, create new book
+			const id = uuid();
+			booksDb = booksDb.concat({ ...body, id });
+			ctx.body = id;
+		}
+
 		await next();
 	}
 });

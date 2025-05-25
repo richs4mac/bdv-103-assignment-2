@@ -1,22 +1,22 @@
+import { BookID, Book } from "../src/types";
 import assignment1 from "./assignment-1";
 
-export type BookID = string;
-
-export interface Book {
-  id?: BookID,
-  name: string,
-  author: string,
-  description: string,
-  price: number,
-  image: string,
-};
+const apiUrl = `http://localhost:3001/books`;
 
 async function listBooks(filters?: Array<{ from?: number, to?: number; }>): Promise<Book[]> {
   return assignment1.listBooks(filters);
 }
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {
-  throw new Error("Todo");
+  let result = await fetch(apiUrl, { method: "POST", body: JSON.stringify(book) });
+
+  if (result.ok) {
+    // And if it is valid, we parse the JSON result and return it.
+    return (await result.json() as BookID);
+  } else {
+    console.log("Failed to create or update book: ", await result.text());
+    throw new Error("Failed to create or update book");
+  }
 }
 
 async function removeBook(book: BookID): Promise<void> {
