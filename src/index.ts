@@ -4,6 +4,7 @@ import cors from "@koa/cors";
 import zodRouter from 'koa-zod-router';
 import qs from "koa-qs";
 import book_list from "../mcmasterful-book-list.json";
+import { Book } from "./types";
 
 const app = new Koa();
 
@@ -58,7 +59,7 @@ router.register({
 			}
 		}
 
-		ctx.body = book_list.filter((book, index) => filtered[index] === true);
+		ctx.body = book_list.filter((_book: Book, index: number) => filtered[index] === true);
 		await next();
 	}
 });

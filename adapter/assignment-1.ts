@@ -1,10 +1,4 @@
-export interface Book {
-  name: string,
-  author: string,
-  description: string,
-  price: number,
-  image: string,
-};
+import { Book } from "../src/types";
 
 async function listBooks(filters?: Array<{ from?: number, to?: number; }>): Promise<Book[]> {
   // We want to generate the query string to match the format expected by qs: https://www.npmjs.com/package/qs
