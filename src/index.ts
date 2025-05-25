@@ -17,6 +17,9 @@ app.use(cors());
 
 const router = zodRouter();
 
+// in-memory book list
+let booksDb = [...book_list];
+
 router.register({
 	name: "list books",
 	method: "get",
@@ -34,7 +37,7 @@ router.register({
 
 		// If there are no filters we can return the list directly
 		if (!filters || filters.length === 0) {
-			ctx.body = book_list;
+			ctx.body = booksDb;
 			await next();
 			return;
 		}
@@ -45,7 +48,7 @@ router.register({
 		let filtered: Record<number, true> = {};
 
 		for (let { from, to } of filters) {
-			for (let [index, { price }] of book_list.entries()) {
+			for (let [index, { price }] of booksDb.entries()) {
 				let matches = true;
 				if (from && price < from) {
 					matches = false;
@@ -59,7 +62,7 @@ router.register({
 			}
 		}
 
-		ctx.body = book_list.filter((_book: Book, index: number) => filtered[index] === true);
+		ctx.body = booksDb.filter((_book: Book, index: number) => filtered[index] === true);
 		await next();
 	}
 });
