@@ -1,0 +1,20 @@
+###
+GET http://localhost:3000/books
+
+###
+GET http://localhost:3000/books?filters[0][from]=20&filters[0][to]=40
+
+###
+POST http://localhost:3000/books
+content-type: application/json
+
+[{
+    "name": "sample",
+    "author": "sample",
+    "description": "sample",
+    "price": 0.00,
+    "image": "sample"
+}]
+
+###
+DELETE http://localhost:3000/books/ADD_AN_ID_HERE
