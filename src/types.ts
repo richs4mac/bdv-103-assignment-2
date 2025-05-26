@@ -1,10 +1,12 @@
 import { z } from "zod";
 
-export type BookID = string;
-
 // zod uuid validation doesn't work https://github.com/colinhacks/zod/issues/91
 // regex from https://ihateregex.io/expr/uuid/#
 const uuidRegex = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/;
+
+export const bookIdSchema = z.string().regex(uuidRegex);
+
+export type BookId = z.infer<typeof bookIdSchema>;
 
 export const bookSchema = z.object({
   id: z.string().regex(uuidRegex).optional(),
