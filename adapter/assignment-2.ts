@@ -20,7 +20,14 @@ async function createOrUpdateBook(book: Book): Promise<BookId> {
 }
 
 async function removeBook(book: BookId): Promise<void> {
-  throw new Error("Todo");
+  let result = await fetch(`${apiUrl}/${book}`, { method: "DELETE" });
+
+  if (result.ok) {
+    return;
+  } else {
+    console.log("Failed to delete book: ", await result.text());
+    throw new Error("Failed to delete book");
+  }
 }
 
 const assignment = "assignment-2";
