@@ -1,9 +1,17 @@
 version: "4.0"
 
 services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
   dev:
     image: mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm
     user: root
     volumes:
       - ../..:/workspaces:cached
     command: sleep infinity
+volumes:
+  dbdata6:
