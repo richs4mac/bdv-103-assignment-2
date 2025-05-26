@@ -1,0 +1,33 @@
+###
+GET http://localhost:3001/books
+
+###
+GET http://localhost:3001/books?filters[0][from]=20&filters[0][to]=40
+
+###
+POST http://localhost:3001/books
+content-type: application/json
+
+{
+    "name": "sample",
+    "author": "sample",
+    "description": "sample",
+    "price": 0.00,
+    "image": "sample"
+}
+
+###
+POST http://localhost:3001/books
+content-type: application/json
+
+{
+    "name": "sample",
+    "author": "sample",
+    "description": "sample",
+    "price": 0.00,
+    "image": "sample",
+    "id": "c78713e4-e1f2-4ec7-8322-bbbd15b3ee1c"
+}
+
+###
+DELETE http://localhost:3001/books/399de581-0868-4f17-877e-855de9f6313e

@@ -1,33 +1,40 @@
+import { BookId, Book } from "../src/types";
 import assignment1 from "./assignment-1";
 
-export type BookID = string;
+const apiUrl = `http://localhost:3001/books`;
 
-export interface Book {
-    id?: BookID,
-    name: string,
-    author: string,
-    description: string,
-    price: number,
-    image: string,
-};
-
-async function listBooks(filters?: Array<{from?: number, to?: number}>) : Promise<Book[]>{
-    return assignment1.listBooks(filters);
+async function listBooks(filters?: Array<{ from?: number, to?: number; }>): Promise<Book[]> {
+  return assignment1.listBooks(filters);
 }
 
-async function createOrUpdateBook(book: Book): Promise<BookID> {
-    throw new Error("Todo")
+async function createOrUpdateBook(book: Book): Promise<BookId> {
+  let result = await fetch(apiUrl, { method: "POST", body: JSON.stringify(book) });
+
+  if (result.ok) {
+    // And if it is valid, we parse the JSON result and return it.
+    return (await result.json() as BookId);
+  } else {
+    console.log("Failed to create or update book: ", await result.text());
+    throw new Error("Failed to create or update book");
+  }
 }
 
-async function removeBook(book: BookID): Promise<void> {
-    throw new Error("Todo")
+async function removeBook(book: BookId): Promise<void> {
+  let result = await fetch(`${apiUrl}/${book}`, { method: "DELETE" });
+
+  if (result.ok) {
+    return;
+  } else {
+    console.log("Failed to delete book: ", await result.text());
+    throw new Error("Failed to delete book");
+  }
 }
 
 const assignment = "assignment-2";
 
 export default {
-    assignment,
-    createOrUpdateBook,
-    removeBook,
-    listBooks
+  assignment,
+  createOrUpdateBook,
+  removeBook,
+  listBooks
 };
